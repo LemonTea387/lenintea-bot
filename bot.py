@@ -1,8 +1,13 @@
 import discord
 import boto3
+import os
 
+TOKEN = os.environ('DISCORD_TOKEN')
+INSTANCE_ID = os.environ('INSTANCE_ID')
 client = discord.Client() #connect to discord client
-instance = boto3.client('ec2',region_name = 'ap-southeast-1')
+instance = boto3.client('ec2',region_name = os.environ('REGION'),
+                        aws_access_key_id = os.environ('ACCESS_KEY'),
+                        aws_secret_access_key = os.environ('SECRET_KEY'))
 
 @client.event
 async def on_ready():
@@ -26,7 +31,7 @@ async def on_message(message): #message stuff
 #functions to start instance
 def turnOnInstance():
     try:
-        response = instance.start_instances(
+        instance.start_instances(
         InstanceIds=[
             INSTANCE_ID
                 ],
