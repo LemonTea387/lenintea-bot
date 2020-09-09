@@ -2,12 +2,12 @@ import discord
 import boto3
 import os
 
-TOKEN = os.environ('DISCORD_TOKEN')
-INSTANCE_ID = os.environ('INSTANCE_ID')
+TOKEN = os.getenv('DISCORD_TOKEN')
+INSTANCE_ID = os.getenv('INSTANCE_ID')
 client = discord.Client() #connect to discord client
-instance = boto3.client('ec2',region_name = os.environ('REGION'),
-                        aws_access_key_id = os.environ('ACCESS_KEY'),
-                        aws_secret_access_key = os.environ('SECRET_KEY'))
+instance = boto3.client('ec2',region_name = os.getenv('REGION'),
+                        aws_access_key_id = os.getenv('ACCESS_KEY'),
+                        aws_secret_access_key = os.getenv('SECRET_KEY'))
 
 @client.event
 async def on_ready():
