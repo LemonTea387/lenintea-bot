@@ -2,7 +2,7 @@ import discord
 import boto3
 import os
 
-TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = "NzM2NTMyMDMzNzk4NDA2MjA0.XxwK6A.diIwgUJmSCX6yUgkoyHE85qDFLQ"
 INSTANCE_ID = 0
 client = discord.Client() #connect to discord client
 instance = boto3.client('ec2',region_name = os.getenv('REGION'),
@@ -17,18 +17,18 @@ async def on_ready():
 
 @client.event
 async def on_message(message): 
+    global INSTANCE_ID
     # Return program flow when author is bot. Stops looping
     if message.author == client.user: 
         return
 
     if message.content.startswith("+start"): 
-        global INSTANCE_ID
         if(message.content.split()[1] == "lemonteabagpack"):
             INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
         elif(message.content.split()[1] == "UltimateAlchemy"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
         else:
-            message.channel.send('INVALID SERVER NAME BRUHH')
+            await message.channel.send('INVALID SERVER NAME BRUHH')
             return
 
 
@@ -46,16 +46,15 @@ async def on_message(message):
 
     # Displays the state of the instance
     elif message.content.startswith("+state"):
-        global INSTANCE_ID
         if(message.content.split()[1] == "lemonteabagpack"):
             INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
         elif(message.content.split()[1] == "UltimateAlchemy"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
         else:
-            message.channel.send('INVALID SERVER NAME BRUHH')
+            await message.channel.send('INVALID SERVER NAME BRUHH')
             return
 
-            
+
         await message.channel.send('AWS Instance state : ' + getInstanceState())
 
 
