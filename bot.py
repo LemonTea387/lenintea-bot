@@ -2,7 +2,7 @@ import discord
 import boto3
 import os
 
-TOKEN = "NzM2NTMyMDMzNzk4NDA2MjA0.XxwK6A.diIwgUJmSCX6yUgkoyHE85qDFLQ"
+TOKEN = os.getenv('DISCORD_TOKEN')
 INSTANCE_ID = 0
 client = discord.Client() #connect to discord client
 instance = boto3.client('ec2',region_name = os.getenv('REGION'),
