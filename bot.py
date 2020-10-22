@@ -3,7 +3,7 @@ import boto3
 import os
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-INSTANCE_ID = os.getenv('INSTANCE_ID')
+INSTANCE_ID = 0
 client = discord.Client() #connect to discord client
 instance = boto3.client('ec2',region_name = os.getenv('REGION'),
                         aws_access_key_id = os.getenv('ACCESS_KEY'),
@@ -21,7 +21,17 @@ async def on_message(message):
     if message.author == client.user: 
         return
 
-    if message.content == '+start': 
+    if message.content.startswith("+start"): 
+        global INSTANCE_ID
+        if(message.content.split()[1] == "lemonteabagpack"):
+            INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
+        elif(message.content.split()[1] == "UltimateAlchemy"):
+            INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
+        else:
+            message.channel.send('INVALID SERVER NAME BRUHH')
+            return
+
+
         state = getInstanceState()
         # Innitiate server only when instance state is not running, pending or stopping. 
         # (AWS boto3 does not reply 'stopped' state)
@@ -35,7 +45,17 @@ async def on_message(message):
             await message.channel.send('Server is ' + state + '\nIf you think this is a bug, contact your incompetent developer.')
 
     # Displays the state of the instance
-    elif message.content == '+state':
+    elif message.content.startswith("+state"):
+        global INSTANCE_ID
+        if(message.content.split()[1] == "lemonteabagpack"):
+            INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
+        elif(message.content.split()[1] == "UltimateAlchemy"):
+            INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
+        else:
+            message.channel.send('INVALID SERVER NAME BRUHH')
+            return
+
+            
         await message.channel.send('AWS Instance state : ' + getInstanceState())
 
 
