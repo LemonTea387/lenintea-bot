@@ -27,6 +27,8 @@ async def on_message(message):
             INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
         elif(message.content.split()[1] == "UltimateAlchemy"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
+        elif(message.content.split()[1] == "Vanilla"):
+            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA1163")
         else:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
@@ -50,12 +52,14 @@ async def on_message(message):
             INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
         elif(message.content.split()[1] == "UltimateAlchemy"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
+        elif(message.content.split()[1] == "Vanilla"):
+            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA1163")
         else:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
 
 
-        await message.channel.send('AWS Instance state : ' + getInstanceState())
+        await message.channel.send('AWS Instance state : ' + getInstanceState() +f'\n {getInstanceIp()}')
 
 
 # Functions to start instance
@@ -75,9 +79,16 @@ def turnOnInstance():
 # Returns state of server as String
 def getInstanceState():
     try:
-        response = instance.describe_instance_status(InstanceIds=[INSTANCE_ID])
-        return response['InstanceStatuses'][0]['InstanceState']['Name']
+        response = instance.describe_instances(InstanceIds=[INSTANCE_ID])
+        return response['Reservations'][0]['Instances'][0]['State']['Name']
     except:
         return 'Server is not up :)'
+
+
+# Returns the public ip of the server
+def getInstanceIp():
+    try:
+        response = instance.describe_instances(InstanceIds=[INSTANCE_ID])
+        return response['Reservations'][0]['Instances'][0]['PublicIpAddress']
     
 client.run(TOKEN)
