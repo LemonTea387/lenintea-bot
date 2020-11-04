@@ -28,7 +28,7 @@ async def on_message(message):
         elif(message.content.split()[1] == "UltimateAlchemy"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
         elif(message.content.split()[1] == "Vanilla"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA1163")
+            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA")
         else:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
@@ -53,13 +53,13 @@ async def on_message(message):
         elif(message.content.split()[1] == "UltimateAlchemy"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
         elif(message.content.split()[1] == "Vanilla"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA1163")
+            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA")
         else:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
 
 
-        await message.channel.send('AWS Instance state : ' + getInstanceState() +f'\n {getInstanceIp()}')
+        await message.channel.send('AWS Instance Public Ip : ' + getInstanceIp() + '\nstate : ' + getInstanceState())
 
 
 # Functions to start instance
