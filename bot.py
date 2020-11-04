@@ -90,5 +90,7 @@ def getInstanceIp():
     try:
         response = instance.describe_instances(InstanceIds=[INSTANCE_ID])
         return response['Reservations'][0]['Instances'][0]['PublicIpAddress']
+    except:
+        return 'Server is not up :)'
     
 client.run(TOKEN)
