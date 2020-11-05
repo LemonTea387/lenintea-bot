@@ -23,11 +23,11 @@ async def on_message(message):
         return
 
     if message.content.startswith("+start"): 
-        if(message.content.split()[1] == "lemonteabagpack"):
+        if(message.content.split()[1].lower() == "lemonteabagpack"):
             INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
-        elif(message.content.split()[1] == "UltimateAlchemy"):
+        elif(message.content.split()[1].lower() == "ultimatealchemy"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
-        elif(message.content.split()[1] == "Vanilla"):
+        elif(message.content.split()[1].lower() == "vanilla"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA")
         else:
             await message.channel.send('INVALID SERVER NAME BRUHH')
