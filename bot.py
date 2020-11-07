@@ -29,6 +29,8 @@ async def on_message(message):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
         elif(message.content.split()[1].lower() == "vanilla"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA")
+        elif(message.content.split()[1].lower() == "enigmatica2light"):
+            INSTANCE_ID = os.getenv("INSTANCE_ID_ENIGMATICA2LIGHT")
         else:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
@@ -54,6 +56,8 @@ async def on_message(message):
             INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
         elif(message.content.split()[1].lower() == "vanilla"):
             INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA")
+        elif(message.content.split()[1].lower() == "enigmatica2light"):
+            INSTANCE_ID = os.getenv("INSTANCE_ID_ENIGMATICA2LIGHT")
         else:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
