@@ -69,7 +69,7 @@ async def on_message(message):
     # Pays respect
     elif message.content.upper().startswith("+F"):
         for mention in message.mentions:
-            await message.channel.send(f'{message.author} has paid their respects to {mention}')
+            await message.channel.send(f'{message.author.mention} has paid their respects to {mention.mention}')
 
 # Functions to start instance
 # Returns boolean on outcome
