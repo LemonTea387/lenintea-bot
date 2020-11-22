@@ -18,10 +18,11 @@ async def on_ready():
 @client.event
 async def on_message(message): 
     global INSTANCE_ID
-    # Return program flow when author is bot. Stops looping
+    # Return program flow when author is bot. Stops looping 
     if message.author == client.user: 
         return
 
+    # Start method for the instances
     if message.content.startswith("+start"): 
         if(message.content.split()[1].lower() == "lemonteabagpack"):
             INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
@@ -65,6 +66,10 @@ async def on_message(message):
 
         await message.channel.send('AWS Instance Public Ip : ' + getInstanceIp() + '\nstate : ' + getInstanceState())
 
+    # Pays respect
+    elif message.content.upper().startswith("+F"):
+        for mention in message.mentions:
+            await message.channel.send(f'{message.author} has paid their respects to {mention}')
 
 # Functions to start instance
 # Returns boolean on outcome
