@@ -9,6 +9,14 @@ instance = boto3.client('ec2',region_name = os.getenv('REGION'),
                         aws_access_key_id = os.getenv('ACCESS_KEY'),
                         aws_secret_access_key = os.getenv('SECRET_KEY'))
 
+# Dict to fetch the correct instance id
+instance_name = {
+    "lemonteabagpack":os.getenv("INSTANCE_ID_LEMON"),
+    "ultimatealchemy":os.getenv("INSTANCE_ID_ULTIMATEALCHEMY"),
+    "vanilla":os.getenv("INSTANCE_ID_VANILLA"),
+    "enigmatica2light":os.getenv("INSTANCE_ID_ENIGMATICA2LIGHT")
+}
+
 # On event of bot going up and running
 @client.event
 async def on_ready():
@@ -24,17 +32,11 @@ async def on_message(message):
 
     # Start method for the instances
     if message.content.startswith("+start"): 
-        if(message.content.split()[1].lower() == "lemonteabagpack"):
-            INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
-        elif(message.content.split()[1].lower() == "ultimatealchemy"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
-        elif(message.content.split()[1].lower() == "vanilla"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA")
-        elif(message.content.split()[1].lower() == "enigmatica2light"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_ENIGMATICA2LIGHT")
-        else:
+        if message.content.split()[1].lower() not in instance_name:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
+        else :
+            INSTANCE_ID = instance_name.get(message.content.split()[1].lower())
 
 
         state = getInstanceState()
@@ -51,21 +53,30 @@ async def on_message(message):
 
     # Displays the state of the instance
     elif message.content.startswith("+state"):
-        if(message.content.split()[1].lower() == "lemonteabagpack"):
-            INSTANCE_ID = os.getenv('INSTANCE_ID_LEMON')
-        elif(message.content.split()[1].lower() == "ultimatealchemy"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_ULTIMATEALCHEMY")
-        elif(message.content.split()[1].lower() == "vanilla"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_VANILLA")
-        elif(message.content.split()[1].lower() == "enigmatica2light"):
-            INSTANCE_ID = os.getenv("INSTANCE_ID_ENIGMATICA2LIGHT")
-        else:
+        if message.content.split()[1].lower() not in instance_name:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
-
+        else :
+            INSTANCE_ID = instance_name.get(message.content.split()[1].lower())
 
         await message.channel.send('AWS Instance Public Ip : ' + getInstanceIp() + '\nstate : ' + getInstanceState())
-
+    
+    # Stops the server
+    elif message.content.startswith("+stop"):
+        if message.content.split()[1].lower() not in instance_name:
+            await message.channel.send('INVALID SERVER NAME BRUHH')
+            return
+        else :
+            INSTANCE_ID = instance_name.get(message.content.split()[1].lower())
+        
+        if message.author.server_permissions.administrator:    
+            if stopInstance():
+                await message.channel.send('Server is stopping~')
+            else :
+                await message.channel.send('Server did not stop.')
+        else :
+            await message.channel.send('You are not admin :(, your attacks are FUTILE!')
+            
     # Pays respect
     elif message.content.upper().startswith("+F"):
         for mention in message.mentions:
@@ -79,6 +90,20 @@ def turnOnInstance():
         InstanceIds=[
             INSTANCE_ID
                 ],
+        DryRun = False
+        )
+        return True
+    except:
+        return False
+
+# Function to stop instance
+# Returns boolean on outcome
+def stopInstance():
+    try:
+        instance.stop_instances(
+        InstanceIds=[
+            INSTANCE_ID
+            ],
         DryRun = False
         )
         return True
