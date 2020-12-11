@@ -69,8 +69,7 @@ async def on_message(message):
         else :
             INSTANCE_ID = instance_name.get(message.content.split()[1].lower())
         
-        if message.author.server_permissions.administrator:
-            await message.channel.send('Server is attempting to stop.')    
+        if message.author.guild_permissions.administrator:
             if (stopInstance()):
                 await message.channel.send('Server is stopping~')
             else :
