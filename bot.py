@@ -1,6 +1,7 @@
 import discord
 import boto3
 import os
+from read_instances import instances
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 INSTANCE_ID = 0
@@ -10,12 +11,7 @@ instance = boto3.client('ec2',region_name = os.getenv('REGION'),
                         aws_secret_access_key = os.getenv('SECRET_KEY'))
 
 # Dict to fetch the correct instance id
-instance_name = {
-    "lemonteabagpack":os.getenv("INSTANCE_ID_LEMON"),
-    "ultimatealchemy":os.getenv("INSTANCE_ID_ULTIMATEALCHEMY"),
-    "vanilla":os.getenv("INSTANCE_ID_VANILLA"),
-    "enigmatica2light":os.getenv("INSTANCE_ID_ENIGMATICA2LIGHT")
-}
+instance_name = instances
 
 # On event of bot going up and running
 @client.event
