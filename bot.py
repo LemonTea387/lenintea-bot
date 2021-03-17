@@ -1,17 +1,13 @@
 import discord
 import boto3
 import os
-from read_instances import instances
+from read_instances import get_instances
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-INSTANCE_ID = 0
 client = discord.Client() #connect to discord client
 instance = boto3.client('ec2',region_name = os.getenv('REGION'),
                         aws_access_key_id = os.getenv('ACCESS_KEY'),
                         aws_secret_access_key = os.getenv('SECRET_KEY'))
-
-# Dict to fetch the correct instance id
-instance_name = instances
 
 # On event of bot going up and running
 @client.event
@@ -21,25 +17,25 @@ async def on_ready():
 
 @client.event
 async def on_message(message): 
-    global INSTANCE_ID
     # Return program flow when author is bot. Stops looping 
     if message.author == client.user: 
         return
 
     # Start method for the instances
     if message.content.startswith("+start"): 
-        if message.content.split()[1].lower() not in instance_name:
+        # Reset instance_name to new list to have the most updated list
+        instance_name = get_instances()
+        if ("INSTANCE_ID_"+message.content.split()[1].upper()) not in instance_name:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
         else :
-            INSTANCE_ID = instance_name.get(message.content.split()[1].lower())
+            INSTANCE_ID = instance_name.get("INSTANCE_ID_"+message.content.split()[1].upper())
 
-
-        state = getInstanceState()
+        state = getInstanceState(INSTANCE_ID)
         # Innitiate server only when instance state is not running, pending or stopping. 
         # (AWS boto3 does not reply 'stopped' state)
         if state != 'running' and state != 'pending' and state != 'stopping':
-            if (turnOnInstance()):
+            if (turnOnInstance(INSTANCE_ID)):
                 await message.channel.send("Server is starting")
             else:
                 await message.channel.send('Error in starting server')
@@ -49,29 +45,41 @@ async def on_message(message):
 
     # Displays the state of the instance
     elif message.content.startswith("+state"):
-        if message.content.split()[1].lower() not in instance_name:
+        # Reupdate Instance_name to have the latest data
+        instance_name = get_instances()
+        if ("INSTANCE_ID_"+message.content.split()[1].upper()) not in instance_name:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
         else :
-            INSTANCE_ID = instance_name.get(message.content.split()[1].lower())
+            INSTANCE_ID = instance_name.get("INSTANCE_ID_"+message.content.split()[1].upper())
 
-        await message.channel.send('AWS Instance Public Ip : ' + getInstanceIp() + '\nstate : ' + getInstanceState())
+        await message.channel.send('AWS Instance Public Ip : ' + getInstanceIp(INSTANCE_ID) + '\nstate : ' + getInstanceState(INSTANCE_ID))
     
     # Stops the server
     elif message.content.startswith("+stop"):
-        if message.content.split()[1].lower() not in instance_name:
+        # Reupdate instance_name to have the latest data
+        instance_name = get_instances()
+        if ("INSTANCE_ID_"+message.content.split()[1].upper()) not in instance_name:
             await message.channel.send('INVALID SERVER NAME BRUHH')
             return
         else :
-            INSTANCE_ID = instance_name.get(message.content.split()[1].lower())
+            INSTANCE_ID = instance_name.get("INSTANCE_ID_"+message.content.split()[1].upper())
         
         if message.author.guild_permissions.administrator:
-            if (stopInstance()):
+            if (stopInstance(INSTANCE_ID)):
                 await message.channel.send('Server is stopping~')
             else :
                 await message.channel.send('Server did not stop.')
         else :
             await message.channel.send('You are not admin :(, your attacks are FUTILE!')
+    
+    # Lists all the instances
+    elif message.content.startswith("+listservers"):
+        # Reupdate instance_name to have the latest data
+        instance_name = get_instances()
+        names = [name[12:] for name in instance_name]
+        names = "\n".join(names)
+        await message.channel.send(f'```\nList of Servers available :\n{names}\n```')
             
     # Pays respect
     elif message.content.upper().startswith("+F"):
@@ -80,7 +88,7 @@ async def on_message(message):
 
 # Functions to start instance
 # Returns boolean on outcome
-def turnOnInstance():
+def turnOnInstance(INSTANCE_ID):
     try:
         instance.start_instances(
         InstanceIds=[
@@ -94,7 +102,7 @@ def turnOnInstance():
 
 # Function to stop instance
 # Returns boolean on outcome
-def stopInstance():
+def stopInstance(INSTANCE_ID):
     try:
         instance.stop_instances(
         InstanceIds=[
@@ -107,7 +115,7 @@ def stopInstance():
         return False
 
 # Returns state of server as String
-def getInstanceState():
+def getInstanceState(INSTANCE_ID):
     try:
         response = instance.describe_instances(InstanceIds=[INSTANCE_ID])
         return response['Reservations'][0]['Instances'][0]['State']['Name']
@@ -116,7 +124,7 @@ def getInstanceState():
 
 
 # Returns the public ip of the server
-def getInstanceIp():
+def getInstanceIp(INSTANCE_ID):
     try:
         response = instance.describe_instances(InstanceIds=[INSTANCE_ID])
         return response['Reservations'][0]['Instances'][0]['PublicIpAddress']

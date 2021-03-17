@@ -1,6 +1,6 @@
-import os
-instances = {}
-with open('instances.txt','r') as f:
-    for line in f:
-        key, configVar = line.split(':')
-        instances[key] = os.getenv(configVar.strip())
+def get_instances():
+    import os
+    instances = {}
+    instances = os.environ
+    instances = {key:instances[key] for key in list(instances) if key.startswith("INSTANCE_ID")}
+    return instances
