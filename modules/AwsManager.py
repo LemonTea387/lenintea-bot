@@ -19,7 +19,7 @@ class AwsManager(commands.Cog):
         self.update_instance_bank()
         id = 'INSTANCE_ID_'+instance_name.strip().upper()
         if self.__is_valid_instance(id):
-            await ctx.send('AWS Instance Public Ip : ' + self.__get_instance_ip(id) + '\nstate : ' + self.__get_instance_tate(id))
+            await ctx.send('AWS Instance Public Ip : ' + self.__get_instance_ip(id) + '\nstate : ' + self.__get_instance_state(id))
         else:
             await ctx.send('Sorry, was it too much to ask for you to follow the server names? What a disappointment.')
     
