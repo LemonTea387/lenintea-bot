@@ -1,11 +1,10 @@
 from discord.ext import commands
-from read_instances import get_instances
 import os
 import boto3
 class AwsManager(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
-        self.instances_bank = get_instances()
+        self.instances_bank = self.update_instance_bank()
         self.instance = boto3.client('ec2',region_name = os.getenv('REGION'),
                         aws_access_key_id = os.getenv('ACCESS_KEY'),
                         aws_secret_access_key = os.getenv('SECRET_KEY'))
