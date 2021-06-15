@@ -16,7 +16,7 @@ async def unload_cog(ctx,name):
 @bot.event
 async def on_command_error(ctx,error):
     if isinstance(error,CommandNotFound):
-        await ctx.send(':doge_gun: Speak something I understand! :doge_gun:')
+        await ctx.send('<:doge_gun:742261984145178640> Speak something I understand! <:doge_gun:742261984145178640>')
 
 for filename in os.listdir('./modules'):
     if filename.endswith('.py'):
