@@ -1,12 +1,9 @@
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 import os
-from read_instances import get_instances
-
 # CONSTANTS
 TOKEN = os.getenv('DISCORD_TOKEN')
 bot = commands.Bot('+') #Discord Bot (Subclass of Discord.Client())
-
 
 @bot.command()
 async def load_cog(ctx,name):
