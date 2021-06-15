@@ -15,7 +15,10 @@ class AwsManager(commands.Cog):
         self.instances_bank = instances
     
     @commands.command()
-    async def state(self,ctx,instance_name:str):
+    async def state(self,ctx,instance_name:str,*args):
+        if len(args) != 0:
+            await ctx.send(f"<:nani:742261756000469003> Hello, what is {' '.join(args)}? <:nani:742261756000469003> ")
+            return
         self.update_instance_bank()
         name = 'INSTANCE_ID_'+instance_name.strip().upper()
         if self.__is_valid_instance(name):
@@ -25,7 +28,10 @@ class AwsManager(commands.Cog):
             await ctx.send('Sorry, was it too much to ask for you to follow the server names? What a disappointment.')
     
     @commands.command()
-    async def start(self,ctx,instance_name:str):
+    async def start(self,ctx,instance_name:str,*args):
+        if len(args) != 0:
+            await ctx.send(f"<:nani:742261756000469003> Hello, what is {' '.join(args)}? <:nani:742261756000469003> ")
+            return
         self.update_instance_bank()
         name = 'INSTANCE_ID_'+instance_name.strip().upper()
         if self.__is_valid_instance(name):
@@ -46,7 +52,10 @@ class AwsManager(commands.Cog):
     
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def stop(self,ctx,instance_name:str):
+    async def stop(self,ctx,instance_name:str,*args):
+        if len(args) != 0:
+            await ctx.send(f"<:nani:742261756000469003> Hello, what is {' '.join(args)}? <:nani:742261756000469003> ")
+            return
         self.update_instance_bank()
         name = 'INSTANCE_ID_'+instance_name.strip().upper()
         if self.__is_valid_instance(name):
@@ -60,7 +69,10 @@ class AwsManager(commands.Cog):
             return
         
     @commands.command()
-    async def listservers(self,ctx):
+    async def listservers(self,ctx, *args):
+        if len(args) != 0:
+            await ctx.send(f"<:nani:742261756000469003> Hello, what is {' '.join(args)}? <:nani:742261756000469003> ")
+            return
         self.update_instance_bank()
         names = [name[12:] for name in self.instances_bank]
         names = '\n'.join(names)
