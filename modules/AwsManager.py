@@ -17,8 +17,9 @@ class AwsManager(commands.Cog):
     @commands.command()
     async def state(self,ctx,instance_name:str):
         self.update_instance_bank()
-        id = 'INSTANCE_ID_'+instance_name.strip().upper()
-        if self.__is_valid_instance(id):
+        name = 'INSTANCE_ID_'+instance_name.strip().upper()
+        if self.__is_valid_instance(name):
+            id = self.instances_bank.get(name)
             await ctx.send('AWS Instance Public Ip : ' + self.__get_instance_ip(id) + '\nstate : ' + self.__get_instance_state(id))
         else:
             await ctx.send('Sorry, was it too much to ask for you to follow the server names? What a disappointment.')
@@ -26,8 +27,9 @@ class AwsManager(commands.Cog):
     @commands.command()
     async def start(self,ctx,instance_name:str):
         self.update_instance_bank()
-        id = 'INSTANCE_ID_'+instance_name.strip().upper()
-        if self.__is_valid_instance(id):
+        name = 'INSTANCE_ID_'+instance_name.strip().upper()
+        if self.__is_valid_instance(name):
+            id = self.instances_bank.get(name)
             state = self.__get_instance_state(id)
             # Innitiate server only when instance state is not running, pending or stopping. 
             # (AWS boto3 does not reply 'stopped' state)
@@ -46,8 +48,9 @@ class AwsManager(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def stop(self,ctx,instance_name:str):
         self.update_instance_bank()
-        id = 'INSTANCE_ID_'+instance_name.strip().upper()
-        if self.__is_valid_instance(id):
+        name = 'INSTANCE_ID_'+instance_name.strip().upper()
+        if self.__is_valid_instance(name):
+            id = self.instances_bank.get(name)
             if self.__stop_instance(id):
                 await ctx.send('Server is stopping~')
             else:
