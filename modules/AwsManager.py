@@ -81,7 +81,7 @@ class AwsManager(commands.Cog):
     # Returns the public ip of the server
     def __get_instance_ip(self,instance_id:str):
         try:
-            response = instance.describe_instances(InstanceIds=[instance_id])
+            response = self.instance.describe_instances(InstanceIds=[instance_id])
             return response['Reservations'][0]['Instances'][0]['PublicIpAddress']
         except:
             return 'Server is not up :)'
